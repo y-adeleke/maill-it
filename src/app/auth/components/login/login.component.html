@@ -1,1 +1,53 @@
-<h1>login ww</h1>
+<div class="sign-in-box">
+  <div class="mail-bg"></div>
+
+  <div class="form-box">
+    <form action="">
+      <div class="logo"></div>
+      <h1>Sign In</h1>
+
+      <div class="input-box">
+        <p>Email</p>
+        <app-custom-input
+          [type]="'email'"
+          [placeholder]="'abc@example.com'"
+          [formControl]="formControl"
+        ></app-custom-input>
+        <mat-error *ngIf="formControl.hasError('required')"
+          >This field is required</mat-error
+        >
+        <mat-error *ngIf="formControl.hasError('email')"
+          >Please enter a valid email address</mat-error
+        >
+      </div>
+
+      <div class="input-box">
+        <p>Password</p>
+        <app-password></app-password>
+      </div>
+
+      <button mat-raised-button>Welcome:)</button>
+
+      <p class="forget-pass">
+        Silly billy, did you forget your <a href="">password?</a>
+      </p>
+
+      <div class="or-box">
+        <hr />
+        <span>OR</span>
+        <hr />
+      </div>
+
+      <button mat-raised-button class="btn-outline">Sign up</button>
+    </form>
+  </div>
+</div>
+
+<!-- 
+
+  <a
+    href="https://www.freepik.com/free-photo/email-envelope-inbox-shape-social-media-notification-icon-speech-bubbles-3d-cartoon-banner-website-ui-pink-background-3d-rendering-illustration_24803410.htm#query=mail&position=1&from_view=search&track=sph"
+    >Image by mamewmy</a
+  >
+  on Freepik
+-->
