@@ -13,10 +13,11 @@
           [placeholder]="'abc@example.com'"
           [formControl]="formControl"
         ></app-custom-input>
-        <mat-error *ngIf="formControl.hasError('required')"
+        <mat-error
+          *ngIf="formControl.touched && formControl.hasError('required')"
           >This field is required</mat-error
         >
-        <mat-error *ngIf="formControl.hasError('email')"
+        <mat-error *ngIf="formControl.touched && formControl.hasError('email')"
           >Please enter a valid email address</mat-error
         >
       </div>

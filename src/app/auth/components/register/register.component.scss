@@ -20,32 +20,60 @@
   .form-box {
     grid-column: 2/3;
     position: relative;
-    padding: 3rem;
-
-    .logo {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      height: 3.75rem;
-      width: 3.75rem;
-      background-color: #d9d9d9;
-      border-radius: 3rem;
-    }
-
-    h1 {
-      text-align: center;
-    }
+    padding: 2rem 3rem;
 
     .stepper-box {
       margin: 0 auto;
-      width: 70%;
-      padding: 1rem;
+      width: 75%;
+      padding: 0rem 1rem;
       border-radius: 1rem;
+
+      h1 {
+        text-align: center;
+        padding-bottom: 1rem;
+      }
+      .move-down {
+        margin-top: 2rem;
+      }
+      .center-p {
+        margin-top: -1rem;
+        text-align: center;
+      }
 
       .input-box {
         .form-field-box {
           width: 100%;
+          margin: 0 auto;
         }
+        .form-field-code {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-evenly;
+          .code-input {
+            width: 50px;
+            margin-right: 0.5rem;
+            input {
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      .input-box_email {
+        width: 120%;
+        z-index: 10;
+        .form-field-box_email {
+          width: 70%;
+        }
+        .small-text {
+          font-size: 0.8rem;
+          margin-left: 5px;
+        }
+      }
+
+      .input-box__suggestions {
+        display: flex;
       }
 
       .phone-input-container {
@@ -62,6 +90,12 @@
         }
       }
 
+      .step-prev-btn {
+        position: absolute;
+        top: 2rem;
+        left: 4rem;
+        z-index: 10;
+      }
       .nxt-btn {
         margin-top: 1rem;
         width: 100%;
@@ -75,5 +109,57 @@
         }
       }
     }
+  }
+}
+
+::ng-deep .mat-step-header:hover:not([aria-disabled]),
+::ng-deep .mat-step-header:active:not([aria-disabled]) {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-icon,
+::ng-deep .mat-step-header .mat-step-icon-selected,
+::ng-deep .mat-step-header .mat-step-icon-state-done,
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: #000;
+  cursor: pointer;
+}
+::ng-deep .mdc-evolution-chip-set__chips {
+  display: flex;
+  flex-flow: nowrap !important;
+}
+/* For Webkit/Blink browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+//Animation...
+.slide-right {
+  animation: slideFromRight 1s ease-in-out forwards;
+}
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

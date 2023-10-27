@@ -1,20 +1,29 @@
 <div class="sign-in-box">
   <div class="mail-bg"></div>
-
   <div class="form-box">
-    <div class="logo"></div>
-    <h1>Let's get to know you</h1>
+    <button mat-raised-button color="basic" *ngIf="showSignInBtn">
+      <div>Sign In</div>
+      <mat-icon class="icon">navigate_before</mat-icon>
+    </button>
 
     <mat-stepper linear #stepper labelPosition="bottom" class="stepper-box">
       <!-- Step 1-->
       <mat-step [stepControl]="userInfoFormGroup" [editable]="isEditable">
-        <form [formGroup]="userInfoFormGroup">
+        <h1>Let's get to know you</h1>
+        <form
+          [formGroup]="userInfoFormGroup"
+          (submit)="userInformationHandler()"
+        >
           <div class="input-box">
             <p>First name</p>
             <mat-form-field class="form-field-box">
+              <mat-label
+                *ngIf="userInfoFormGroup.get('firstName')?.hasError('required')"
+                >Enter first name</mat-label
+              >
               <input
                 matInput
-                formControlName="firstCtrl"
+                formControlName="firstName"
                 placeholder="EX. Yusuf"
                 required
               />
@@ -24,9 +33,13 @@
           <div class="input-box">
             <p>Last name</p>
             <mat-form-field class="form-field-box">
+              <mat-label
+                *ngIf="userInfoFormGroup.get('lastName')?.hasError('required')"
+                >Enter last name</mat-label
+              >
               <input
                 matInput
-                formControlName="firstCtrl"
+                formControlName="lastName"
                 placeholder="EX. Adeleke"
                 required
               />
@@ -37,7 +50,7 @@
             <p>DOB</p>
             <mat-form-field class="form-field-box">
               <mat-label>Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker" />
+              <input matInput [matDatepicker]="picker" formControlName="dob" />
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle matIconSuffix [for]="picker">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
@@ -60,6 +73,15 @@
                 </mat-select>
               </mat-form-field>
               <mat-form-field class="form-field-phone">
+                <mat-label
+                  *ngIf="
+                    userInfoFormGroup
+                      .get('phoneNumber')
+                      ?.hasError('required') ||
+                    userInfoFormGroup.get('phoneNumber')?.hasError('pattern')
+                  "
+                  >Enter phone number</mat-label
+                >
                 <input
                   matInput
                   formControlName="phoneNumber"
@@ -69,7 +91,12 @@
             </div>
           </div>
 
-          <button mat-raised-button matStepperNext class="nxt-btn">
+          <button
+            mat-raised-button
+            matStepperNext
+            class="nxt-btn"
+            type="submit"
+          >
             <div>Sign Up</div>
             <mat-icon class="icon">east</mat-icon>
           </button>
@@ -77,39 +104,109 @@
       </mat-step>
 
       <!-- Step 2-->
-      <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
-        <form [formGroup]="secondFormGroup">
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input
-              matInput
-              formControlName="secondCtrl"
-              placeholder="Ex. 1 Main St, New York, NY"
-              required
-            />
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+      <mat-step [stepControl]="otpForm" [editable]="isEditable">
+        <h1 class="move-down">Verify your phone number</h1>
+        <p class="center-p">
+          We've sent a code to the phone number ({{
+            userInfoFormGroup.get("phoneNumber")?.value
+          }}) you provided
+        </p>
+        <form [formGroup]="otpForm">
+          <div class="input-box">
+            <p>OTP</p>
+            <div class="form-field-code">
+              <mat-form-field
+                *ngFor="let otp of otpArray; let i = index"
+                class="code-input"
+                appearance="outline"
+              >
+                <input
+                  type="text"
+                  matInput
+                  maxlength="1"
+                  placeholder="*"
+                  formControlName="otp{{ i }}"
+                  #otpInput
+                  appOtpInput
+                  [nextElement]="otpInputs.toArray()[i + 1]"
+                  [previousElement]="otpInputs.toArray()[i - 1]"
+                />
+              </mat-form-field>
+            </div>
           </div>
+
+          <button
+            mat-raised-button
+            matStepperPrevious
+            class="step-prev-btn"
+            [class.slide-right]="!showSignInBtn"
+            (click)="showSignInBtn = true"
+          >
+            <mat-icon class="icon">navigate_before</mat-icon>
+            Back
+          </button>
+          <button mat-raised-button matStepperNext class="nxt-btn">
+            <div>Sign Up</div>
+            <mat-icon class="icon">east</mat-icon>
+          </button>
         </form>
       </mat-step>
 
       <!-- Step 3-->
-      <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
-        <form [formGroup]="secondFormGroup">
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input
-              matInput
-              formControlName="secondCtrl"
-              placeholder="Ex. 1 Main St, New York, NY"
-              required
-            />
-          </mat-form-field>
+      <mat-step [stepControl]="emailForm" [editable]="isEditable">
+        <form [formGroup]="emailForm">
+          <h1 class="move-down">Create your Email :)</h1>
+          <p class="center-p">
+            Create your radical username, remember it has to be special
+          </p>
+
+          <div class="input-box_email">
+            <p>Email</p>
+            <mat-form-field class="form-field-box_email" appearance="outline">
+              <mat-label *ngIf="emailForm.get('email')?.hasError('required')"
+                >Enter an email</mat-label
+              >
+              <input
+                matInput
+                formControlName="email"
+                placeholder="EX. yusuf"
+                required
+              />
+            </mat-form-field>
+            <span class="small-text">@maily.com</span>
+          </div>
+
+          <div class="input-box__suggestions">
+            <span>Suggestions</span>
+            <mat-chip-listbox aria-label="Fish selection" class="mat-chip">
+              <mat-chip-option>One fish</mat-chip-option>
+              <mat-chip-option>Two fish</mat-chip-option>
+              <mat-chip-option>Accent fish</mat-chip-option>
+              <mat-chip-option>Warn fish</mat-chip-option>
+              <mat-chip-option>Accent fish</mat-chip-option>
+              <mat-chip-option>Warn fish</mat-chip-option>
+            </mat-chip-listbox>
+            <div class="fab-right">
+              <button mat-mini-fab matTooltip="Primary" color="Basic">
+                <mat-icon>arrow_right_alt</mat-icon>
+              </button>
+            </div>
+          </div>
+
           <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+            <button
+              mat-raised-button
+              matStepperPrevious
+              class="step-prev-btn"
+              [class.slide-right]="!showSignInBtn"
+            >
+              <mat-icon class="icon">navigate_before</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button matStepperNext class="nxt-btn">
+              <div>Sign Up</div>
+              <mat-icon class="icon">east</mat-icon>
+            </button>
           </div>
         </form>
       </mat-step>
