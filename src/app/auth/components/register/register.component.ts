@@ -4,7 +4,7 @@ import {
   ViewChildren,
   QueryList,
   ElementRef,
-  AfterViewInit,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -47,7 +47,8 @@ import { MatChipsModule } from '@angular/material/chips';
   ],
 })
 export class RegisterComponent implements OnInit {
-  showSignInBtn = true;
+  timer: any;
+  reRenderBtn = false;
   isEditable = true;
   otpArray = Array(6).fill(0);
 
@@ -58,30 +59,29 @@ export class RegisterComponent implements OnInit {
   countries = [
     { code: '+1', name: 'USA' },
     { code: '+44', name: 'UK' },
-    // ... add other countries here
   ];
   @ViewChildren('otpInput') otpInputs: QueryList<ElementRef> = new QueryList();
+  @ViewChild('suggestionsContainer') suggestionsContainer: ElementRef | any;
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.triggerSlideRightButton();
     this.userInfoFormGroup = this.formBuilder.group({
-      firstName: ['yusuf', [Validators.required]],
+      firstName: ['', [Validators.required]],
       lastName: ['adeleke', [Validators.required]],
       dob: ['', Validators.required],
       countryCode: ['+1', Validators.required],
-      phoneNumber: [
-        '4',
-        [(Validators.required, Validators.pattern('^[0-9]*$'))],
-      ],
+      phoneNumber: ['4', [Validators.required, Validators.pattern('^[0-9]*$')]],
     });
 
+    let otpValidators = [Validators.required, Validators.pattern('^[0-9]*$')];
     this.otpForm = this.formBuilder.group({
-      otp0: ['', Validators.required],
-      otp1: ['', Validators.required],
-      otp2: ['', Validators.required],
-      otp3: ['', Validators.required],
-      otp4: ['', Validators.required],
-      otp5: ['', Validators.required],
+      otp0: ['', otpValidators],
+      otp1: ['', otpValidators],
+      otp2: ['', otpValidators],
+      otp3: ['', otpValidators],
+      otp4: ['', otpValidators],
+      otp5: ['', otpValidators],
     });
 
     this.emailForm = this.formBuilder.group({
@@ -89,10 +89,46 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  triggerSlideRightButton() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    this.reRenderBtn = false;
+    this.timer = setTimeout(() => {
+      this.reRenderBtn = true;
+    }, 100);
+  }
+
+  scrollSuggestionHandler() {
+    const suggestionEl = this.suggestionsContainer._elementRef.nativeElement;
+    suggestionEl.scrollBy({
+      left: 100,
+      behavior: 'smooth',
+    });
+  }
+
   //User information (Step 1)
   userInformationHandler() {
-    console.log(this.userInfoFormGroup.value);
-    this.showSignInBtn = false;
-    console.log(this.showSignInBtn);
+    if (this.userInfoFormGroup.valid) {
+      console.log(this.userInfoFormGroup.value);
+      this.triggerSlideRightButton();
+    }
+  }
+
+  //OTP (Step 2)
+  otpFormHandler() {
+    if (this.otpForm.valid) {
+      const { otp0, otp1, otp2, otp3, otp4, otp5 } = this.otpForm.value;
+      const userInputedOtp = otp0 + otp1 + otp2 + otp3 + otp4 + otp5;
+      this.triggerSlideRightButton();
+    }
+  }
+
+  //Email (Step 3)
+  emailFormHandler() {
+    if (this.emailForm.valid) {
+      console.log(this.emailForm.value);
+      this.triggerSlideRightButton();
+    }
   }
 }

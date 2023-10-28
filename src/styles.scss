@@ -8,3 +8,18 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+html {
+  // input field
+  --mdc-outlined-text-field-focus-label-text-color: #000;
+  --mdc-outlined-text-field-caret-color: #000;
+  --mdc-outlined-text-field-focus-outline-color: #000;
+  --mdc-filled-text-field-caret-color: #000;
+  --mdc-filled-text-field-focus-active-indicator-color: #000;
+  --mdc-filled-text-field-focus-label-text-color: #000;
+
+  //mat steppers-headers
+  --mat-stepper-header-selected-state-icon-background-color: #000;
+  --mat-stepper-header-done-state-icon-background-color: #000;
+  --mat-stepper-header-edit-state-icon-background-color: #000;
+  //ff4081
+}

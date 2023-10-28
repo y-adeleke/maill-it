@@ -6,8 +6,7 @@
 .sign-in-box {
   width: 100vw;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
 
   .mail-bg {
     background-image: url("../../../../assets/images/email.jpg");
@@ -15,10 +14,11 @@
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
+    width: 50%;
   }
 
   .form-box {
-    grid-column: 2/3;
+    width: 50%;
     position: relative;
     padding: 2rem 3rem;
 
@@ -74,6 +74,24 @@
 
       .input-box__suggestions {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        span {
+          margin-right: 1rem;
+        }
+        .suggestions {
+          display: flex;
+          overflow-x: scroll;
+          scrollbar-width: none; /* Firefox */
+        }
+        .suggestions::-webkit-scrollbar {
+          display: none !important;
+        }
+        .fab-right {
+          margin-left: -0.5rem;
+          background-color: #fff;
+        }
       }
 
       .phone-input-container {
@@ -89,13 +107,6 @@
           }
         }
       }
-
-      .step-prev-btn {
-        position: absolute;
-        top: 2rem;
-        left: 4rem;
-        z-index: 10;
-      }
       .nxt-btn {
         margin-top: 1rem;
         width: 100%;
@@ -108,41 +119,52 @@
           order: 1;
         }
       }
+
+      .greetings {
+        text-align: center;
+        margin-top: 2rem;
+
+        h1 {
+          padding-bottom: 0;
+          letter-spacing: 3px;
+          font-size: xx-large;
+        }
+        button {
+          margin-top: 3rem;
+          padding: 1.5rem 2.5rem;
+          background-color: #000;
+          color: #fff;
+        }
+      }
     }
   }
 }
 
-::ng-deep .mat-step-header:hover:not([aria-disabled]),
-::ng-deep .mat-step-header:active:not([aria-disabled]) {
-  background-color: transparent !important;
-}
-
-::ng-deep .mat-step-header .mat-step-icon-icon,
-::ng-deep .mat-step-header .mat-step-icon-selected,
-::ng-deep .mat-step-header .mat-step-icon-state-done,
-::ng-deep .mat-step-header .mat-step-icon-state-edit {
-  background-color: #000;
-  cursor: pointer;
-}
-::ng-deep .mdc-evolution-chip-set__chips {
-  display: flex;
-  flex-flow: nowrap !important;
-}
-/* For Webkit/Blink browsers */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* For Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
+.form-field-phone {
+  div {
+    div {
+      div {
+        .mdc-notched-outline__trailing {
+          border-right: none !important;
+        }
+      }
+    }
+  }
 }
 
 //Animation...
 .slide-right {
-  animation: slideFromRight 1s ease-in-out forwards;
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  transition: all 0.5s ease-in-out;
+  animation: slideFromRight 0.5s ease-in-out forwards !important;
+}
+.slide-left {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  animation: slideFromRight 0.5s ease-in-out forwards !important;
 }
 
 @keyframes slideFromRight {
@@ -163,3 +185,58 @@ input[type="number"] {
     opacity: 1;
   }
 }
+
+//OVERRIDEN DEFAULT ANGULAR MATERIAL STYLES
+::ng-deep .mdc-evolution-chip-set__chips {
+  display: flex;
+  flex-flow: nowrap !important;
+}
+
+::ng-deep .mat-step-header:hover:not([aria-disabled]),
+::ng-deep .mat-step-header:active:not([aria-disabled]),
+::ng-deep .mat-step-header:focus:not([aria-disabled]) {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-step-header {
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-mdc-standard-chip.mat-mdc-chip-selected.mat-accent {
+  --mdc-chip-elevated-container-color: #000 !important;
+  --mdc-chip-elevated-disabled-container-color: #000 !important;
+}
+::ng-deep .mat-mdc-standard-chip.mat-mdc-chip-selected.mat-primary {
+  --mdc-chip-elevated-container-color: #000 !important;
+  --mdc-chip-elevated-disabled-container-color: #000 !important;
+}
+/*
+.form-field-phone {
+  width: 80%;
+  ::ng-deep div {
+    div {
+      div {
+        .mdc-notched-outline__leading {
+          border-left: none !important;
+          border-top-left-radius: 0 !important;
+          border-bottom-left-radius: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+.form-field-c_code {
+  ::ng-deep div {
+    div {
+      div {
+        .mdc-notched-outline__trailing {
+          border-right: none !important;
+          border-top-right-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+        }
+      }
+    }
+  }
+}
+*/

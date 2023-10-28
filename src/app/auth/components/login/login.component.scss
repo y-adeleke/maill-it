@@ -6,8 +6,8 @@
 .sign-in-box {
   width: 100vw;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row-reverse;
 
   .mail-bg {
     background-image: url("../../../../assets/images/email.jpg");
@@ -15,11 +15,13 @@
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
+    width: 50%;
   }
 
   .form-box {
     grid-column: 2/3;
     position: relative;
+    width: 50%;
 
     form {
       margin: 0 auto;
@@ -82,4 +84,8 @@
       }
     }
   }
+}
+
+input:-internal-autofill-selected {
+  background-color: transparent !important;
 }

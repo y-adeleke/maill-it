@@ -1,14 +1,18 @@
 <div class="sign-in-box">
   <div class="mail-bg"></div>
   <div class="form-box">
-    <button mat-raised-button color="basic" *ngIf="showSignInBtn">
-      <div>Sign In</div>
-      <mat-icon class="icon">navigate_before</mat-icon>
-    </button>
-
     <mat-stepper linear #stepper labelPosition="bottom" class="stepper-box">
       <!-- Step 1-->
       <mat-step [stepControl]="userInfoFormGroup" [editable]="isEditable">
+        <button
+          mat-raised-button
+          color="basic"
+          class="prev-btn slide-right"
+          *ngIf="reRenderBtn"
+        >
+          <div>Sign In</div>
+          <mat-icon class="icon">navigate_before</mat-icon>
+        </button>
         <h1>Let's get to know you</h1>
         <form
           [formGroup]="userInfoFormGroup"
@@ -111,7 +115,7 @@
             userInfoFormGroup.get("phoneNumber")?.value
           }}) you provided
         </p>
-        <form [formGroup]="otpForm">
+        <form [formGroup]="otpForm" (submit)="otpFormHandler()">
           <div class="input-box">
             <p>OTP</p>
             <div class="form-field-code">
@@ -138,14 +142,19 @@
           <button
             mat-raised-button
             matStepperPrevious
-            class="step-prev-btn"
-            [class.slide-right]="!showSignInBtn"
-            (click)="showSignInBtn = true"
+            class="prev-btn slide-right"
+            (click)="triggerSlideRightButton()"
+            *ngIf="reRenderBtn"
           >
             <mat-icon class="icon">navigate_before</mat-icon>
             Back
           </button>
-          <button mat-raised-button matStepperNext class="nxt-btn">
+          <button
+            mat-raised-button
+            matStepperNext
+            class="nxt-btn"
+            type="submit"
+          >
             <div>Sign Up</div>
             <mat-icon class="icon">east</mat-icon>
           </button>
@@ -154,7 +163,7 @@
 
       <!-- Step 3-->
       <mat-step [stepControl]="emailForm" [editable]="isEditable">
-        <form [formGroup]="emailForm">
+        <form [formGroup]="emailForm" (submit)="emailFormHandler()">
           <h1 class="move-down">Create your Email :)</h1>
           <p class="center-p">
             Create your radical username, remember it has to be special
@@ -163,9 +172,7 @@
           <div class="input-box_email">
             <p>Email</p>
             <mat-form-field class="form-field-box_email" appearance="outline">
-              <mat-label *ngIf="emailForm.get('email')?.hasError('required')"
-                >Enter an email</mat-label
-              >
+              <mat-label>Enter an email</mat-label>
               <input
                 matInput
                 formControlName="email"
@@ -178,32 +185,48 @@
 
           <div class="input-box__suggestions">
             <span>Suggestions</span>
-            <mat-chip-listbox aria-label="Fish selection" class="mat-chip">
+
+            <mat-chip-listbox
+              aria-label="Fish selection"
+              class="suggestions"
+              #suggestionsContainer
+            >
               <mat-chip-option>One fish</mat-chip-option>
               <mat-chip-option>Two fish</mat-chip-option>
-              <mat-chip-option>Accent fish</mat-chip-option>
+              <mat-chip-option selected>Accent fish</mat-chip-option>
               <mat-chip-option>Warn fish</mat-chip-option>
-              <mat-chip-option>Accent fish</mat-chip-option>
+              <mat-chip-option>One fish</mat-chip-option>
+              <mat-chip-option>Two fish</mat-chip-option>
               <mat-chip-option>Warn fish</mat-chip-option>
             </mat-chip-listbox>
-            <div class="fab-right">
-              <button mat-mini-fab matTooltip="Primary" color="Basic">
-                <mat-icon>arrow_right_alt</mat-icon>
-              </button>
-            </div>
+            <button
+              mat-mini-fab
+              matTooltip="Primary"
+              color="Primary"
+              class="fab-right"
+              (click)="scrollSuggestionHandler()"
+            >
+              <mat-icon>arrow_right_alt</mat-icon>
+            </button>
           </div>
 
           <div>
             <button
               mat-raised-button
               matStepperPrevious
-              class="step-prev-btn"
-              [class.slide-right]="!showSignInBtn"
+              class="prev-btn slide-right"
+              (click)="triggerSlideRightButton()"
+              *ngIf="reRenderBtn"
             >
               <mat-icon class="icon">navigate_before</mat-icon>
               Back
             </button>
-            <button mat-raised-button matStepperNext class="nxt-btn">
+            <button
+              mat-raised-button
+              matStepperNext
+              class="nxt-btn"
+              type="submit"
+            >
               <div>Sign Up</div>
               <mat-icon class="icon">east</mat-icon>
             </button>
@@ -213,10 +236,24 @@
 
       <!-- Step 4-->
       <mat-step>
-        <p>You are now done.</p>
+        <div class="greetings">
+          <h1>👋Welcome!</h1>
+          <p>Connecting You Instantly, Delivering with Precision</p>
+          <button class="expore-btn" mat-button mat-raised-button>
+            Explore
+          </button>
+        </div>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
+          <button
+            mat-button
+            mat-raised-button
+            matStepperPrevious
+            class="prev-btn slide-right"
+            (click)="triggerSlideRightButton()"
+            *ngIf="reRenderBtn"
+          >
+            Back
+          </button>
         </div>
       </mat-step>
     </mat-stepper>
