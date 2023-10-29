@@ -2,35 +2,55 @@
   <div class="mail-bg"></div>
 
   <div class="form-box">
-    <form action="">
+    <form action="" [formGroup]="signInForm" (submit)="signInHandler()">
       <div class="logo"></div>
       <h1>Sign In</h1>
 
       <div class="input-box">
         <p>Email</p>
-        <app-custom-input
-          [type]="'email'"
-          [placeholder]="'abc@example.com'"
-          [formControl]="formControl"
-        ></app-custom-input>
+        <mat-form-field class="form-field-box">
+          <input
+            type="email"
+            matInput
+            formControlName="email"
+            placeholder="abc@example.com"
+          />
+        </mat-form-field>
         <mat-error
-          *ngIf="formControl.touched && formControl.hasError('required')"
-          >This field is required</mat-error
-        >
-        <mat-error *ngIf="formControl.touched && formControl.hasError('email')"
-          >Please enter a valid email address</mat-error
+          class="error"
+          *ngIf="
+            signInForm.get('email')?.touched &&
+            signInForm.get('email')?.hasError('email')
+          "
+          >Enter a valid email</mat-error
         >
       </div>
 
       <div class="input-box">
         <p>Password</p>
-        <app-password></app-password>
+        <mat-form-field class="form-field-box">
+          <input
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            formControlName="password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </mat-form-field>
       </div>
 
-      <button mat-raised-button>Welcome:)</button>
+      <button mat-raised-button type="submit" class="btn">Welcome:)</button>
 
       <p class="forget-pass">
-        Silly billy, did you forget your <a href="">password?</a>
+        Silly billy, did you forget your
+        <a routerLink="/auth/forgot-password">password?</a>
       </p>
 
       <div class="or-box">
@@ -39,7 +59,13 @@
         <hr />
       </div>
 
-      <button mat-raised-button class="btn-outline">Sign up</button>
+      <button
+        mat-raised-button
+        class="btn btn-outline"
+        routerLink="'/auth/register'"
+      >
+        Sign up
+      </button>
     </form>
   </div>
 </div>

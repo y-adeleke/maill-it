@@ -5,11 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PasswordComponent } from '../shared/password/password.component';
+import { MatIconModule } from '@angular/material/icon';
 import {
   Validators,
   FormsModule,
   ReactiveFormsModule,
-  FormControl,
+  FormGroup,
+  FormBuilder,
 } from '@angular/forms';
 
 @Component({
@@ -26,13 +28,23 @@ import {
     PasswordComponent,
     FormsModule,
     ReactiveFormsModule,
+    MatIconModule,
   ],
 })
-export class LoginComponent {
-  formControl = new FormControl();
+export class LoginComponent implements OnInit {
+  hide = true;
+  signInForm: FormGroup = new FormGroup({});
   // passwordValidators = [Validators.required, Validators.minLength(8)];
 
-  constructor() {
-    this.formControl.setValidators([Validators.email, Validators.required]);
+  constructor(private formbuilder: FormBuilder) {}
+  ngOnInit(): void {
+    this.signInForm = this.formbuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+    });
+  }
+
+  signInHandler() {
+    console.log(this.signInForm.value);
   }
 }

@@ -45,9 +45,15 @@
 
       .input-box {
         margin-top: 1rem;
+        .form-field-box {
+          width: 100%;
+        }
+        .error {
+          margin-top: -1rem;
+        }
       }
 
-      button {
+      .btn {
         margin-top: 1rem;
         width: 100%;
         padding: 1.8rem;
@@ -84,8 +90,4 @@
       }
     }
   }
-}
-
-input:-internal-autofill-selected {
-  background-color: transparent !important;
 }
