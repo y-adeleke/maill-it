@@ -2,236 +2,35 @@
   <div class="mail-bg"></div>
   <div class="form-box">
     <mat-stepper linear #stepper labelPosition="bottom" class="stepper-box">
-      <!-- Step 1-->
-      <mat-step [stepControl]="userInfoFormGroup" [editable]="isEditable">
-        <button
-          mat-raised-button
-          color="basic"
-          class="prev-btn slide-right"
-          *ngIf="reRenderBtn"
-        >
-          <div>Sign In</div>
-          <mat-icon class="icon">navigate_before</mat-icon>
-        </button>
-        <h1>Let's get to know you</h1>
-        <form
-          [formGroup]="userInfoFormGroup"
-          (submit)="userInformationHandler()"
-        >
-          <div class="input-box">
-            <p>First name</p>
-            <mat-form-field class="form-field-box">
-              <mat-label
-                *ngIf="userInfoFormGroup.get('firstName')?.hasError('required')"
-                >Enter first name</mat-label
-              >
-              <input
-                matInput
-                formControlName="firstName"
-                placeholder="EX. Yusuf"
-                required
-              />
-            </mat-form-field>
-          </div>
-
-          <div class="input-box">
-            <p>Last name</p>
-            <mat-form-field class="form-field-box">
-              <mat-label
-                *ngIf="userInfoFormGroup.get('lastName')?.hasError('required')"
-                >Enter last name</mat-label
-              >
-              <input
-                matInput
-                formControlName="lastName"
-                placeholder="EX. Adeleke"
-                required
-              />
-            </mat-form-field>
-          </div>
-
-          <div class="input-box">
-            <p>DOB</p>
-            <mat-form-field class="form-field-box">
-              <mat-label>Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dob" />
-              <mat-hint>MM/DD/YYYY</mat-hint>
-              <mat-datepicker-toggle matIconSuffix [for]="picker">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker color="accent"></mat-datepicker>
-            </mat-form-field>
-          </div>
-
-          <div class="phone-input-container">
-            <p>Phone number</p>
-            <div class="phone-input-wrapper">
-              <mat-form-field class="form-field">
-                <mat-select formControlName="countryCode">
-                  <mat-option
-                    *ngFor="let country of countries"
-                    [value]="country.code"
-                  >
-                    {{ country.code }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-phone">
-                <mat-label
-                  *ngIf="
-                    userInfoFormGroup
-                      .get('phoneNumber')
-                      ?.hasError('required') ||
-                    userInfoFormGroup.get('phoneNumber')?.hasError('pattern')
-                  "
-                  >Enter phone number</mat-label
-                >
-                <input
-                  matInput
-                  formControlName="phoneNumber"
-                  placeholder="437-234-123"
-                />
-              </mat-form-field>
-            </div>
-          </div>
-
-          <button
-            mat-raised-button
-            matStepperNext
-            class="nxt-btn"
-            type="submit"
-          >
-            <div>Sign Up</div>
-            <mat-icon class="icon">east</mat-icon>
-          </button>
-        </form>
+      <!-- Step 1   -->
+      <mat-step [stepControl]="userInformationFG" [editable]="isEditable">
+        <h1>Let's get to know you.</h1>
+        <app-registration-form
+          (formGroupEmitter)="userInformationFG = $event"
+        ></app-registration-form>
       </mat-step>
 
-      <!-- Step 2-->
+      <!-- Step 2
       <mat-step [stepControl]="otpForm" [editable]="isEditable">
-        <h1 class="move-down">Verify your phone number</h1>
+        <h1 class="move-down">Verify your phone number.</h1>
         <p class="center-p">
           We've sent a code to the phone number ({{
-            userInfoFormGroup.get("phoneNumber")?.value
+            userInformationFG.get("phoneNumber")?.value
           }}) you provided
         </p>
-        <form [formGroup]="otpForm" (submit)="otpFormHandler()">
-          <div class="input-box">
-            <p>OTP</p>
-            <div class="form-field-code">
-              <mat-form-field
-                *ngFor="let otp of otpArray; let i = index"
-                class="code-input"
-                appearance="outline"
-              >
-                <input
-                  type="text"
-                  matInput
-                  maxlength="1"
-                  placeholder="*"
-                  formControlName="otp{{ i }}"
-                  #otpInput
-                  appOtpInput
-                  [nextElement]="otpInputs.toArray()[i + 1]"
-                  [previousElement]="otpInputs.toArray()[i - 1]"
-                />
-              </mat-form-field>
-            </div>
-          </div>
-
-          <button
-            mat-raised-button
-            matStepperPrevious
-            class="prev-btn slide-right"
-            (click)="triggerSlideRightButton()"
-            *ngIf="reRenderBtn"
-          >
-            <mat-icon class="icon">navigate_before</mat-icon>
-            Back
-          </button>
-          <button
-            mat-raised-button
-            matStepperNext
-            class="nxt-btn"
-            type="submit"
-          >
-            <div>Sign Up</div>
-            <mat-icon class="icon">east</mat-icon>
-          </button>
-        </form>
+        <app-otp-form (formGroupEmitter)="otpForm = $event"></app-otp-form>
       </mat-step>
+    -->
 
       <!-- Step 3-->
-      <mat-step [stepControl]="emailForm" [editable]="isEditable">
-        <form [formGroup]="emailForm" (submit)="emailFormHandler()">
-          <h1 class="move-down">Create your Email :)</h1>
-          <p class="center-p">
-            Create your radical username, remember it has to be special
-          </p>
-
-          <div class="input-box_email">
-            <p>Email</p>
-            <mat-form-field class="form-field-box_email" appearance="outline">
-              <mat-label>Enter an email</mat-label>
-              <input
-                matInput
-                formControlName="email"
-                placeholder="EX. yusuf"
-                required
-              />
-            </mat-form-field>
-            <span class="small-text">@maily.com</span>
-          </div>
-
-          <div class="input-box__suggestions">
-            <span>Suggestions</span>
-
-            <mat-chip-listbox
-              aria-label="Fish selection"
-              class="suggestions"
-              #suggestionsContainer
-            >
-              <mat-chip-option>One fish</mat-chip-option>
-              <mat-chip-option>Two fish</mat-chip-option>
-              <mat-chip-option selected>Accent fish</mat-chip-option>
-              <mat-chip-option>Warn fish</mat-chip-option>
-              <mat-chip-option>One fish</mat-chip-option>
-              <mat-chip-option>Two fish</mat-chip-option>
-              <mat-chip-option>Warn fish</mat-chip-option>
-            </mat-chip-listbox>
-            <button
-              mat-mini-fab
-              matTooltip="Primary"
-              color="Primary"
-              class="fab-right"
-              (click)="scrollSuggestionHandler()"
-            >
-              <mat-icon>arrow_right_alt</mat-icon>
-            </button>
-          </div>
-
-          <div>
-            <button
-              mat-raised-button
-              matStepperPrevious
-              class="prev-btn slide-right"
-              (click)="triggerSlideRightButton()"
-              *ngIf="reRenderBtn"
-            >
-              <mat-icon class="icon">navigate_before</mat-icon>
-              Back
-            </button>
-            <button
-              mat-raised-button
-              matStepperNext
-              class="nxt-btn"
-              type="submit"
-            >
-              <div>Sign Up</div>
-              <mat-icon class="icon">east</mat-icon>
-            </button>
-          </div>
-        </form>
+      <mat-step [stepControl]="emailPasswordForm" [editable]="isEditable">
+        <h1 class="move-down">Create your Email :)</h1>
+        <p class="center-p">
+          Create your radical username, remember it has to be special.
+        </p>
+        <app-email-password-form
+          (formGroupEmitter)="emailPasswordForm = $event"
+        ></app-email-password-form>
       </mat-step>
 
       <!-- Step 4-->
@@ -243,19 +42,28 @@
             Explore
           </button>
         </div>
-        <div>
-          <button
-            mat-button
-            mat-raised-button
-            matStepperPrevious
-            class="prev-btn slide-right"
-            (click)="triggerSlideRightButton()"
-            *ngIf="reRenderBtn"
-          >
-            Back
-          </button>
-        </div>
       </mat-step>
     </mat-stepper>
+
+    <button
+      mat-raised-button
+      color="basic"
+      (click)="goBack()"
+      *ngIf="stepper.selectedIndex === 1"
+      class="prev-btn"
+    >
+      Back
+      <mat-icon class="icon">navigate_before</mat-icon>
+    </button>
+    <button
+      mat-raised-button
+      color="basic"
+      *ngIf="stepper.selectedIndex === 0"
+      class="prev-btn"
+      routerLink="/auth/login"
+    >
+      Sign In
+      <mat-icon class="icon">navigate_before</mat-icon>
+    </button>
   </div>
 </div>

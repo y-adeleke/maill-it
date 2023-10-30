@@ -1,0 +1,29 @@
+<form [formGroup]="otpForm" (submit)="otpFormHandler()">
+  <div class="input-box">
+    <p>OTP</p>
+    <div class="form-field-code">
+      <mat-form-field
+        *ngFor="let otp of otpArray; let i = index"
+        class="code-input"
+        appearance="outline"
+      >
+        <input
+          type="text"
+          matInput
+          maxlength="1"
+          placeholder="*"
+          formControlName="otp{{ i }}"
+          #otpInput
+          appOtpInput
+          [nextElement]="otpInputs.toArray()[i + 1]"
+          [previousElement]="otpInputs.toArray()[i - 1]"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <button mat-raised-button class="nxt-btn" type="submit">
+    <div>Sign Up</div>
+    <mat-icon class="icon">east</mat-icon>
+  </button>
+</form>

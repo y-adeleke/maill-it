@@ -1,0 +1,84 @@
+<form [formGroup]="userInfoFormGroup" (submit)="userInformationHandler()">
+  <div class="input-box">
+    <p>First name</p>
+    <mat-form-field class="form-field-box">
+      <mat-label
+        *ngIf="
+          userInfoFormGroup.get('firstName')?.hasError('required') ||
+          userInfoFormGroup.get('firstName')?.hasError('whitespace')
+        "
+        >Enter first name</mat-label
+      >
+      <input
+        matInput
+        formControlName="firstName"
+        placeholder="EX. Yusuf"
+        required
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="input-box">
+    <p>Last name</p>
+    <mat-form-field class="form-field-box">
+      <mat-label
+        *ngIf="
+          userInfoFormGroup.get('lastName')?.hasError('required') ||
+          userInfoFormGroup.get('lastName')?.hasError('whitespace')
+        "
+        >Enter last name</mat-label
+      >
+      <input
+        matInput
+        formControlName="lastName"
+        placeholder="EX. Adeleke"
+        required
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="input-box">
+    <p>DOB</p>
+    <mat-form-field class="form-field-box">
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dob" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker">
+        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker color="accent"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="phone-input-container">
+    <p>Phone number</p>
+    <div class="phone-input-wrapper">
+      <mat-form-field class="form-field">
+        <mat-select formControlName="countryCode">
+          <mat-option *ngFor="let country of countries" [value]="country.code">
+            {{ country.code }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="form-field-phone">
+        <mat-label
+          *ngIf="
+            userInfoFormGroup.get('phoneNumber')?.hasError('required') ||
+            userInfoFormGroup.get('phoneNumber')?.hasError('pattern')
+          "
+          >Enter phone number</mat-label
+        >
+        <input
+          matInput
+          formControlName="phoneNumber"
+          placeholder="437-234-123"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <button mat-raised-button class="nxt-btn" type="submit">
+    <div>Sign Up</div>
+    <mat-icon class="icon">east</mat-icon>
+  </button>
+</form>

@@ -1,0 +1,108 @@
+form {
+  width: 100%;
+
+  .input-box {
+    width: 100%;
+    .form-field-box {
+      width: 100%;
+      margin: auto;
+    }
+    .form-field-code {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      .code-input {
+        width: 50px;
+        margin-right: 0.5rem;
+        input {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .input-box__suggestions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+    span {
+      margin-right: 1rem;
+    }
+    .suggestions {
+      display: flex;
+      overflow-x: scroll;
+      scrollbar-width: none; /* Firefox */
+    }
+    .suggestions::-webkit-scrollbar {
+      display: none !important;
+    }
+    .fab-right {
+      margin-left: -0.5rem;
+      background-color: #fff;
+    }
+  }
+
+  .phone-input-container {
+    margin-top: 1rem;
+    .phone-input-wrapper {
+      display: flex;
+      width: 100%;
+      .form-field {
+        width: 20%;
+      }
+      .form-field-phone {
+        width: 80%;
+        div {
+          div {
+            div {
+              .mdc-notched-outline__trailing {
+                border-right: none !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .nxt-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1.8rem;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+    .icon {
+      margin-left: 0.7rem;
+      order: 1;
+    }
+  }
+}
+
+//OVERRIDEN DEFAULT ANGULAR MATERIAL STYLES
+::ng-deep .mdc-evolution-chip-set__chips {
+  display: flex;
+  flex-flow: nowrap !important;
+}
+
+::ng-deep .mat-step-header:hover:not([aria-disabled]),
+::ng-deep .mat-step-header:active:not([aria-disabled]),
+::ng-deep .mat-step-header:focus:not([aria-disabled]) {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-step-header {
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-mdc-standard-chip.mat-mdc-chip-selected.mat-accent {
+  --mdc-chip-elevated-container-color: #000 !important;
+  --mdc-chip-elevated-disabled-container-color: #000 !important;
+}
+::ng-deep .mat-mdc-standard-chip.mat-mdc-chip-selected.mat-primary {
+  --mdc-chip-elevated-container-color: #000 !important;
+  --mdc-chip-elevated-disabled-container-color: #000 !important;
+}

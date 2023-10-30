@@ -5,7 +5,7 @@
 }
 .sign-in-box {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
 
   .mail-bg {
@@ -13,7 +13,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh;
+    min-height: 100vh;
     width: 50%;
   }
 
@@ -40,86 +40,6 @@
         text-align: center;
       }
 
-      .input-box {
-        .form-field-box {
-          width: 100%;
-          margin: 0 auto;
-        }
-        .form-field-code {
-          width: 100%;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-evenly;
-          .code-input {
-            width: 50px;
-            margin-right: 0.5rem;
-            input {
-              text-align: center;
-            }
-          }
-        }
-      }
-
-      .input-box_email {
-        width: 120%;
-        z-index: 10;
-        .form-field-box_email {
-          width: 70%;
-        }
-        .small-text {
-          font-size: 0.8rem;
-          margin-left: 5px;
-        }
-      }
-
-      .input-box__suggestions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        span {
-          margin-right: 1rem;
-        }
-        .suggestions {
-          display: flex;
-          overflow-x: scroll;
-          scrollbar-width: none; /* Firefox */
-        }
-        .suggestions::-webkit-scrollbar {
-          display: none !important;
-        }
-        .fab-right {
-          margin-left: -0.5rem;
-          background-color: #fff;
-        }
-      }
-
-      .phone-input-container {
-        margin-top: 1rem;
-        .phone-input-wrapper {
-          display: flex;
-          width: 100%;
-          .form-field {
-            width: 20%;
-          }
-          .form-field-phone {
-            width: 80%;
-          }
-        }
-      }
-      .nxt-btn {
-        margin-top: 1rem;
-        width: 100%;
-        padding: 1.8rem;
-        background-color: #000;
-        color: #fff;
-        cursor: pointer;
-        .icon {
-          margin-left: 0.7rem;
-          order: 1;
-        }
-      }
-
       .greetings {
         text-align: center;
         margin-top: 2rem;
@@ -140,50 +60,12 @@
   }
 }
 
-.form-field-phone {
-  div {
-    div {
-      div {
-        .mdc-notched-outline__trailing {
-          border-right: none !important;
-        }
-      }
-    }
-  }
-}
-
-//Animation...
-.slide-right {
+.prev-btn {
   position: absolute;
+  padding: 1rem;
   top: 2rem;
   left: 3rem;
   transition: all 0.5s ease-in-out;
-  animation: slideFromRight 0.5s ease-in-out forwards !important;
-}
-.slide-left {
-  position: absolute;
-  top: 2rem;
-  left: 3rem;
-  animation: slideFromRight 0.5s ease-in-out forwards !important;
-}
-
-@keyframes slideFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  50% {
-    transform: translateX(50%);
-    opacity: 0;
-  }
-  80% {
-    transform: translateX(-20%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 //OVERRIDEN DEFAULT ANGULAR MATERIAL STYLES
@@ -210,6 +92,7 @@
   --mdc-chip-elevated-container-color: #000 !important;
   --mdc-chip-elevated-disabled-container-color: #000 !important;
 }
+
 /*
 .form-field-phone {
   width: 80%;
@@ -239,4 +122,25 @@
     }
   }
 }
+
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 */

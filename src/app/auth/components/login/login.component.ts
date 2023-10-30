@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CustomInputComponent } from '../shared/custom-input/customInput';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { PasswordComponent } from '../shared/password/password.component';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import {
   Validators,
   FormsModule,
@@ -21,14 +20,13 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    CustomInputComponent,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
-    PasswordComponent,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
+    RouterLink,
   ],
 })
 export class LoginComponent implements OnInit {

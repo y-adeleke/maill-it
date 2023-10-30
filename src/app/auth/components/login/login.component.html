@@ -40,6 +40,7 @@
             (click)="hide = !hide"
             [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hide"
+            type="button"
           >
             <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
           </button>
@@ -47,7 +48,8 @@
       </div>
 
       <button mat-raised-button type="submit" class="btn">Welcome:)</button>
-
+    </form>
+    <div class="box">
       <p class="forget-pass">
         Silly billy, did you forget your
         <a routerLink="/auth/forgot-password">password?</a>
@@ -62,11 +64,12 @@
       <button
         mat-raised-button
         class="btn btn-outline"
-        routerLink="'/auth/register'"
+        routerLink="/auth/register"
+        type="button"
       >
         Sign up
       </button>
-    </form>
+    </div>
   </div>
 </div>
 
