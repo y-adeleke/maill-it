@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { OtpInputDirective } from '../../../shared/otp-input.directive';
 import { CdkStepper } from '@angular/cdk/stepper';
+import { AuthService } from 'src/app/auth/auth-service.service';
 
 @Component({
   selector: 'app-otp-form',
@@ -47,11 +48,12 @@ export class OTPFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private readonly stepper: CdkStepper
+    private readonly stepper: CdkStepper,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    let otpValidators = [Validators.required, Validators.pattern('^[0-9]*$')];
+    let otpValidators = [Validators.required];
     this.otpForm = this.formBuilder.group({
       otp0: ['', otpValidators],
       otp1: ['', otpValidators],
@@ -69,6 +71,7 @@ export class OTPFormComponent implements OnInit {
       const formValue = Object.values(this.otpForm.value);
       const otp = formValue.join('');
       console.log(otp);
+      this.authService.verifyCode(otp);
       this.stepper.next();
     }
   }

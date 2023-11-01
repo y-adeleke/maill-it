@@ -1,4 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -17,7 +25,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { RouterLink } from '@angular/router';
 import { noWhiteSpaceValidator } from '../Validations';
-import { first } from 'rxjs';
+import { RecaptchaVerifier } from 'firebase/auth';
+import { AuthService } from 'src/app/auth/auth-service.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -38,17 +47,22 @@ import { first } from 'rxjs';
     RouterLink,
   ],
 })
-export class RegistrationFormComponent implements OnInit {
+export class RegistrationFormComponent implements OnInit, AfterViewInit {
   @Output() formGroupEmitter = new EventEmitter<FormGroup>();
-  userInfoFormGroup: FormGroup = new FormGroup('');
+  userInfoFormGroup!: FormGroup;
+  recaptchaVerifier!: RecaptchaVerifier;
 
   countries = [
     { code: '+1', name: 'USA' },
     { code: '+44', name: 'UK' },
   ];
+
+  @ViewChild('recaptchaContainer') recaptchaContainer: ElementRef | any;
+
   constructor(
     private formBuilder: FormBuilder,
-    private readonly stepper: CdkStepper
+    private readonly stepper: CdkStepper,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +71,17 @@ export class RegistrationFormComponent implements OnInit {
       lastName: ['adeleke', [Validators.required, noWhiteSpaceValidator()]],
       dob: ['', [Validators.required]],
       countryCode: ['+1', Validators.required],
-      phoneNumber: ['4', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      phoneNumber: ['4', [Validators.required, noWhiteSpaceValidator()]],
     });
     this.formGroupEmitter.emit(this.userInfoFormGroup);
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.recaptchaContainer);
+    this.recaptchaVerifier = new RecaptchaVerifier(
+      this.recaptchaContainer.nativeElement,
+      'size'
+    );
   }
 
   //User information (Step 1)
@@ -72,7 +94,9 @@ export class RegistrationFormComponent implements OnInit {
         phone:
           this.userInfoFormGroup.value.countryCode +
           this.userInfoFormGroup.value.phoneNumber,
+        username: '',
       };
+      this.authService.sendVerificationCode(data, this.recaptchaVerifier);
       this.stepper.next();
     } else {
       alert('Please fill all fields');

@@ -22,6 +22,7 @@ import { OtpInputDirective } from '../../../shared/otp-input.directive';
 import { MatChipsModule } from '@angular/material/chips';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { noWhiteSpaceValidator } from '../Validations';
+import { AuthService } from 'src/app/auth/auth-service.service';
 
 @Component({
   selector: 'app-email-password-form',
@@ -49,7 +50,8 @@ export class EmailPasswordFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private readonly stepper: CdkStepper
+    private readonly stepper: CdkStepper,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -101,6 +103,7 @@ export class EmailPasswordFormComponent implements OnInit {
       const email = this.regForm.get('email')?.value.trim();
       const password = this.regForm.get('password')?.value.trim();
       console.log({ email, password });
+      this.authService.createUser(email, password);
       this.stepper.next();
     }
   }
