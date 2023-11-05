@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/compat/firestore';
 import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
@@ -9,76 +12,115 @@ import {
 } from '@angular/fire/auth';
 import { convertUsernameToEmail } from './components/shared/helpers';
 import { UserDetails } from './components/shared/helpers';
+import { AuthResponse } from './components/shared/helpers';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  confirmationResult: ConfirmationResult | undefined;
-  userData: UserDetails | undefined;
-  constructor(private auth: Auth, private firestore: Firestore) {}
+  private usersCollection: AngularFirestoreCollection<UserDetails>;
+  private confirmationResult: ConfirmationResult | undefined;
+  private userData: UserDetails | undefined;
+  private regSuccess: boolean = false;
+
+  constructor(private auth: Auth, private afs: AngularFirestore) {
+    this.usersCollection = this.afs.collection<UserDetails>('users');
+  }
+  private async checkPhoneNumberExists(phone: string): Promise<boolean> {
+    const querySnapshot = await this.usersCollection.ref
+      .where('phone', '==', phone)
+      .limit(1)
+      .get();
+    return !querySnapshot.empty;
+  }
 
   async sendVerificationCode(
     userDetails: UserDetails,
     recaptchaVerifier: RecaptchaVerifier
-  ): Promise<{ success: boolean; message: string }> {
-    //Confirm from firestore if the phone number is already registered
+  ): Promise<AuthResponse> {
+    this.regSuccess = false;
+
+    if (await this.checkPhoneNumberExists(userDetails.phone)) {
+      return { success: false, message: 'Phone number has already been used' };
+    }
+
     try {
       const confirmationResult = await signInWithPhoneNumber(
         this.auth,
         userDetails.phone,
         recaptchaVerifier
       );
-      // Save confirmationResult to use it in the next step.
       this.confirmationResult = confirmationResult;
       this.userData = userDetails;
+      this.regSuccess = true;
       return { success: true, message: 'Verification code sent' };
-    } catch (error) {
-      // Handle error
-      //phone number already registered
-      //Invalid phone numeber
-      console.error('Error sending verification code', error);
-      return { success: false, message: 'Error sending verification code' };
+    } catch (error: any) {
+      let errorMessage = 'Error sending verification code';
+      if (error.code === 'auth/invalid-phone-number') {
+        errorMessage = 'Invalid phone number';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many requests, please try again later';
+      }
+      return { success: false, message: errorMessage };
     }
   }
 
-  async verifyCode(
-    code: string
-  ): Promise<{ success: boolean; message: string }> {
+  async verifyCode(code: string): Promise<AuthResponse> {
+    this.regSuccess = false;
+    if (!this.confirmationResult) {
+      return {
+        success: false,
+        message: 'No confirmation result to verify code',
+      };
+    }
+
     try {
-      if (this.confirmationResult) {
-        await this.confirmationResult.confirm(code);
-        return { success: true, message: 'Phone number verified' };
-      } else {
-        return { success: false, message: 'Confirmation result not found' };
-      }
-    } catch (error) {
-      console.error('Invalid code', error);
+      await this.confirmationResult.confirm(code);
+      this.regSuccess = true;
+      return { success: true, message: 'Phone number verified' };
+    } catch {
       return { success: false, message: 'Invalid code' };
     }
   }
 
-  async createUser(username: string, password: string): Promise<boolean> {
+  async createUser(username: string, password: string): Promise<AuthResponse> {
+    if (!this.regSuccess)
+      return { success: false, message: 'You are not verified' };
+    if (!this.userData)
+      return { success: false, message: 'No user data available' };
+
+    const email = convertUsernameToEmail(username);
     try {
-      const email = convertUsernameToEmail(username); // Convert username to email
       const userCredential = await createUserWithEmailAndPassword(
         this.auth,
         email,
         password
       );
-      console.log('User created', userCredential);
-      console.log('User data', this.userData);
-      if (this.userData) {
-        this.userData.username = username;
+      this.userData.username = username;
+      const docRef = await this.usersCollection.add(this.userData);
+      return {
+        success: true,
+        message: 'User successfully created',
+        data: docRef,
+      };
+    } catch (error: any) {
+      let message = 'Error creating user: ';
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          message += 'Email already in use';
+          break;
+        case 'auth/invalid-email':
+          message += 'Invalid email';
+          break;
+        default:
+          message += error.message;
+          break;
       }
-      // Store user data or in a  database record
-      // await this.firestore.collection('users').doc(userCredential.user.uid).set({ phoneNumber });
-      return true; // User successfully created
-    } catch (error) {
-      // Handle error
-      //error for existing email
-      console.error('Error creating user', error);
-      return false; // User creation failed
+      return {
+        success: false,
+        message,
+      };
     }
   }
 }

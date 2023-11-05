@@ -14,3 +14,9 @@ export interface UserDetails {
   phone: string;
   username: string;
 }
+
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}

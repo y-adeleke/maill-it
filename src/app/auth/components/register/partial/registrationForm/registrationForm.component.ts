@@ -3,8 +3,6 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ViewChild,
-  ElementRef,
   AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -27,6 +25,7 @@ import { RouterLink } from '@angular/router';
 import { noWhiteSpaceValidator } from '../Validations';
 import { RecaptchaVerifier } from 'firebase/auth';
 import { AuthService } from 'src/app/auth/auth-service.service';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-registration-form',
@@ -49,20 +48,19 @@ import { AuthService } from 'src/app/auth/auth-service.service';
 })
 export class RegistrationFormComponent implements OnInit, AfterViewInit {
   @Output() formGroupEmitter = new EventEmitter<FormGroup>();
-  userInfoFormGroup!: FormGroup;
-  recaptchaVerifier!: RecaptchaVerifier;
+  userInfoFormGroup: FormGroup | any;
+  recaptchaVerifier: RecaptchaVerifier | any;
 
   countries = [
     { code: '+1', name: 'USA' },
     { code: '+44', name: 'UK' },
   ];
 
-  @ViewChild('recaptchaContainer') recaptchaContainer: ElementRef | any;
-
   constructor(
     private formBuilder: FormBuilder,
     private readonly stepper: CdkStepper,
-    private authService: AuthService
+    private authService: AuthService,
+    private auth: Auth
   ) {}
 
   ngOnInit(): void {
@@ -77,11 +75,9 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.recaptchaContainer);
-    this.recaptchaVerifier = new RecaptchaVerifier(
-      this.recaptchaContainer.nativeElement,
-      'size'
-    );
+    this.recaptchaVerifier = new RecaptchaVerifier(this.auth, 'sign-in-btn', {
+      size: 'invisible',
+    });
   }
 
   //User information (Step 1)
@@ -98,8 +94,6 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
       };
       this.authService.sendVerificationCode(data, this.recaptchaVerifier);
       this.stepper.next();
-    } else {
-      alert('Please fill all fields');
     }
   }
 }
