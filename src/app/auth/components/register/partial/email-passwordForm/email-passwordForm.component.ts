@@ -98,12 +98,14 @@ export class EmailPasswordFormComponent implements OnInit {
   }
 
   //Email (Step 3)
-  emailFormHandler() {
+  async emailFormHandler() {
     if (this.regForm.valid) {
       const email = this.regForm.get('email')?.value.trim();
       const password = this.regForm.get('password')?.value.trim();
-      console.log({ email, password });
-      this.authService.createUser(email, password);
+      //loading state
+      const res = await this.authService.createUser(email, password);
+      console.log(res);
+      //done loading
       this.stepper.next();
     }
   }

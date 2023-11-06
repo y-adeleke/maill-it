@@ -66,12 +66,14 @@ export class OTPFormComponent implements OnInit {
   }
 
   //OTP (Step 2)
-  otpFormHandler() {
+  async otpFormHandler() {
     if (this.otpForm.valid) {
       const formValue = Object.values(this.otpForm.value);
       const otp = formValue.join('');
-      console.log(otp);
-      this.authService.verifyCode(otp);
+      //loading state
+      const res = await this.authService.verifyCode(otp);
+      console.log(res);
+      //done loading
       this.stepper.next();
     }
   }

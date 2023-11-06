@@ -1,37 +1,41 @@
 import { Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Auth, RecaptchaVerifier } from '@angular/fire/auth';
 import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-} from '@angular/fire/compat/firestore';
+  Firestore,
+  collection,
+  query,
+  addDoc,
+  where,
+  getDocs,
+  CollectionReference,
+} from '@angular/fire/firestore';
 import {
-  RecaptchaVerifier,
   signInWithPhoneNumber,
   ConfirmationResult,
   createUserWithEmailAndPassword,
-} from '@angular/fire/auth';
-import { convertUsernameToEmail } from './components/shared/helpers';
-import { UserDetails } from './components/shared/helpers';
-import { AuthResponse } from './components/shared/helpers';
-import { firstValueFrom } from 'rxjs';
+} from 'firebase/auth';
+import {
+  UserDetails,
+  convertUsernameToEmail,
+  AuthResponse,
+} from './components/shared/helpers';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private usersCollection: AngularFirestoreCollection<UserDetails>;
+  private usersCollection: CollectionReference<UserDetails> | any;
   private confirmationResult: ConfirmationResult | undefined;
   private userData: UserDetails | undefined;
   private regSuccess: boolean = false;
 
-  constructor(private auth: Auth, private afs: AngularFirestore) {
-    this.usersCollection = this.afs.collection<UserDetails>('users');
+  constructor(private auth: Auth, private firestore: Firestore) {
+    this.usersCollection = collection(this.firestore, 'users');
   }
+
   private async checkPhoneNumberExists(phone: string): Promise<boolean> {
-    const querySnapshot = await this.usersCollection.ref
-      .where('phone', '==', phone)
-      .limit(1)
-      .get();
+    const queryData = query(this.usersCollection, where('phone', '==', phone));
+    const querySnapshot = await getDocs(queryData);
     return !querySnapshot.empty;
   }
 
@@ -46,6 +50,7 @@ export class AuthService {
     }
 
     try {
+      console.log(userDetails);
       const confirmationResult = await signInWithPhoneNumber(
         this.auth,
         userDetails.phone,
@@ -74,7 +79,6 @@ export class AuthService {
         message: 'No confirmation result to verify code',
       };
     }
-
     try {
       await this.confirmationResult.confirm(code);
       this.regSuccess = true;
@@ -97,8 +101,10 @@ export class AuthService {
         email,
         password
       );
-      this.userData.username = username;
-      const docRef = await this.usersCollection.add(this.userData);
+      this.userData.username = email;
+      console.log(userCredential);
+      const docRef = await addDoc(this.usersCollection, this.userData);
+      console.log('docref', docRef);
       return {
         success: true,
         message: 'User successfully created',
@@ -122,5 +128,35 @@ export class AuthService {
         message,
       };
     }
+  }
+
+  async signIn(username: string, password: string): Promise<AuthResponse> {
+    return {
+      success: true,
+      message: 'User successfully signed in',
+      data: {},
+    };
+  }
+
+  async signOut(): Promise<AuthResponse> {
+    try {
+      await this.auth.signOut();
+      return {
+        success: true,
+        message: 'User successfully signed out',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Error signing out',
+      };
+    }
+  }
+
+  async resetPassword(email: string): Promise<AuthResponse> {
+    return {
+      success: true,
+      message: 'Password reset email sent',
+    };
   }
 }

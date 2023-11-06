@@ -81,7 +81,7 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
   }
 
   //User information (Step 1)
-  userInformationHandler() {
+  async userInformationHandler() {
     if (this.userInfoFormGroup.valid) {
       const data = {
         firstName: this.userInfoFormGroup.value.firstName,
@@ -92,7 +92,13 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
           this.userInfoFormGroup.value.phoneNumber,
         username: '',
       };
-      this.authService.sendVerificationCode(data, this.recaptchaVerifier);
+      //loading state
+      const res = await this.authService.sendVerificationCode(
+        data,
+        this.recaptchaVerifier
+      );
+      console.log(res);
+      //done loading
       this.stepper.next();
     }
   }
