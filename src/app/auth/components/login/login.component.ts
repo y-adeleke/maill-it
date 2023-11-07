@@ -12,6 +12,8 @@ import {
   FormGroup,
   FormBuilder,
 } from '@angular/forms';
+import { AuthAccessService } from '../../auth-access-service.service';
+import { LoadingMessageService } from 'src/app/shared/loading-message.service';
 
 @Component({
   selector: 'app-login',
@@ -31,10 +33,13 @@ import {
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  signInForm: FormGroup = new FormGroup({});
-  // passwordValidators = [Validators.required, Validators.minLength(8)];
+  signInForm: FormGroup;
 
-  constructor(private formbuilder: FormBuilder) {}
+  constructor(
+    private formbuilder: FormBuilder,
+    private authAccessService: AuthAccessService,
+    private loadingMessageService: LoadingMessageService
+  ) {}
   ngOnInit(): void {
     this.signInForm = this.formbuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -42,7 +47,19 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  signInHandler() {
-    console.log(this.signInForm.value);
+  async signInHandler() {
+    this.signInForm.markAllAsTouched();
+    if (this.signInForm.valid) {
+      console.log(this.signInForm.value);
+      const email = this.signInForm.value.email.trim();
+      const password = this.signInForm.value.password.trim();
+      this.loadingMessageService.showLoading();
+      const res = await this.authAccessService.signIn(email, password);
+      this.loadingMessageService.hideLoading();
+      if (res.success) {
+        // navigate to home page
+      }
+      this.loadingMessageService.openSnackBarMessage(res.message);
+    }
   }
 }

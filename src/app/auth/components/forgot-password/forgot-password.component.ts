@@ -4,7 +4,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegistrationFormComponent } from '../register/partial/registrationForm/registrationForm.component';
-import { OTPFormComponent } from '../register/partial/otpForm/otpForm.component';
 import { EmailPasswordFormComponent } from '../register/partial/email-passwordForm/email-passwordForm.component';
 import { RouterLink } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
@@ -29,7 +28,6 @@ import { noWhiteSpaceValidator } from '../register/partial/Validations';
     MatStepperModule,
     MatIconModule,
     RegistrationFormComponent,
-    OTPFormComponent,
     EmailPasswordFormComponent,
     RouterLink,
     MatInputModule,
@@ -39,12 +37,11 @@ import { noWhiteSpaceValidator } from '../register/partial/Validations';
   ],
 })
 export class ForgotPasswordComponent {
-  isEditable = false;
+  isEditable = true;
   hide = true;
 
-  emailForm: FormGroup = new FormGroup('');
-  otpForm: FormGroup | any;
-  passwordForm: FormGroup = new FormGroup('');
+  emailForm: FormGroup;
+  passwordForm: FormGroup;
 
   @ViewChild('stepper') stepper: any;
 

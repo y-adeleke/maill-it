@@ -10,11 +10,13 @@ import {
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(AppRoutingModule),
     importProvidersFrom(BrowserAnimationsModule),
+    importProvidersFrom(MatSnackBarModule),
     importProvidersFrom(
       provideFirebaseApp(() =>
         initializeApp({

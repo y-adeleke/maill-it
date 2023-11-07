@@ -24,8 +24,9 @@ import { CdkStepper } from '@angular/cdk/stepper';
 import { RouterLink } from '@angular/router';
 import { noWhiteSpaceValidator } from '../Validations';
 import { RecaptchaVerifier } from 'firebase/auth';
-import { AuthService } from 'src/app/auth/auth-service.service';
+import { AuthSignUpService } from 'src/app/auth/auth-signup-service.service';
 import { Auth } from '@angular/fire/auth';
+import { LoadingMessageService } from 'src/app/shared/loading-message.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -48,8 +49,8 @@ import { Auth } from '@angular/fire/auth';
 })
 export class RegistrationFormComponent implements OnInit, AfterViewInit {
   @Output() formGroupEmitter = new EventEmitter<FormGroup>();
-  userInfoFormGroup: FormGroup | any;
-  recaptchaVerifier: RecaptchaVerifier | any;
+  userInfoFormGroup: FormGroup;
+  recaptchaVerifier: RecaptchaVerifier;
 
   countries = [
     { code: '+1', name: 'USA' },
@@ -59,8 +60,9 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private readonly stepper: CdkStepper,
-    private authService: AuthService,
-    private auth: Auth
+    private authService: AuthSignUpService,
+    private auth: Auth,
+    private loadingMessageService: LoadingMessageService
   ) {}
 
   ngOnInit(): void {
@@ -91,15 +93,19 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
           this.userInfoFormGroup.value.countryCode +
           this.userInfoFormGroup.value.phoneNumber,
         username: '',
+        uid: '',
+        recoveryEmail: '',
       };
-      //loading state
+      this.loadingMessageService.showLoading();
       const res = await this.authService.sendVerificationCode(
         data,
         this.recaptchaVerifier
       );
-      console.log(res);
-      //done loading
-      this.stepper.next();
+      this.loadingMessageService.hideLoading();
+      if (res.success) {
+        this.stepper.next();
+      }
+      this.loadingMessageService.openSnackBarMessage(res.message);
     }
   }
 }

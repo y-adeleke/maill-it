@@ -28,9 +28,9 @@ import { RouterLink } from '@angular/router';
 export class RegisterComponent {
   isEditable = true;
 
-  userInformationFG: FormGroup | any;
-  otpForm: FormGroup | any;
-  emailPasswordForm: FormGroup | any;
+  userInformationFG: FormGroup;
+  otpForm: FormGroup;
+  emailPasswordForm: FormGroup;
 
   @ViewChild('stepper') stepper: any;
 

@@ -19,9 +19,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { OtpInputDirective } from '../../../shared/otp-input.directive';
+import { OtpInputDirective } from '../../../../auth-shared/otp-input.directive';
 import { CdkStepper } from '@angular/cdk/stepper';
-import { AuthService } from 'src/app/auth/auth-service.service';
+import { AuthSignUpService } from 'src/app/auth/auth-signup-service.service';
+import { LoadingMessageService } from 'src/app/shared/loading-message.service';
 
 @Component({
   selector: 'app-otp-form',
@@ -49,7 +50,8 @@ export class OTPFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private readonly stepper: CdkStepper,
-    private authService: AuthService
+    private authService: AuthSignUpService,
+    private loadingMessageService: LoadingMessageService
   ) {}
 
   ngOnInit(): void {
@@ -70,11 +72,14 @@ export class OTPFormComponent implements OnInit {
     if (this.otpForm.valid) {
       const formValue = Object.values(this.otpForm.value);
       const otp = formValue.join('');
-      //loading state
+      this.loadingMessageService.showLoading();
       const res = await this.authService.verifyCode(otp);
-      console.log(res);
-      //done loading
-      this.stepper.next();
+      this.loadingMessageService.hideLoading();
+      if (res.success) {
+        this.stepper.next();
+      }
+      this.loadingMessageService.openSnackBarMessage(res.message);
+      console.log(res.data);
     }
   }
 }

@@ -15,7 +15,7 @@
         <h1 class="move-down">Verify your phone number.</h1>
         <p class="center-p">
           We've sent a code to the phone number ({{
-            userInformationFG.get("phoneNumber")?.value
+            userInformationFG.get("phoneNumber").value
           }}) you provided
         </p>
         <app-otp-form (formGroupEmitter)="otpForm = $event"></app-otp-form>
@@ -59,7 +59,7 @@
       color="basic"
       *ngIf="stepper.selectedIndex === 0"
       class="prev-btn"
-      routerLink="/auth/login"
+      routerLink="/login"
     >
       Sign In
       <mat-icon class="icon">navigate_before</mat-icon>

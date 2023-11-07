@@ -5,22 +5,22 @@
     <form action="" [formGroup]="signInForm" (submit)="signInHandler()">
       <div class="logo"></div>
       <h1>Sign In</h1>
-
       <div class="input-box">
-        <p>Email</p>
+        <p>Username</p>
         <mat-form-field class="form-field-box">
           <input
             type="email"
             matInput
             formControlName="email"
-            placeholder="abc@example.com"
+            placeholder="abc@maily.com"
           />
         </mat-form-field>
         <mat-error
           class="error"
           *ngIf="
             signInForm.get('email')?.touched &&
-            signInForm.get('email')?.hasError('email')
+            (signInForm.get('email')?.hasError('email') ||
+              signInForm.get('email')?.hasError('required'))
           "
           >Enter a valid email</mat-error
         >
@@ -45,6 +45,14 @@
             <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
           </button>
         </mat-form-field>
+        <mat-error
+          class="error"
+          *ngIf="
+            signInForm.get('password')?.touched &&
+            signInForm.get('password')?.hasError('required')
+          "
+          >Enter your password</mat-error
+        >
       </div>
 
       <button mat-raised-button type="submit" class="btn">Welcome:)</button>
@@ -52,7 +60,7 @@
     <div class="box">
       <p class="forget-pass">
         Silly billy, did you forget your
-        <a routerLink="/auth/forgot-password">password?</a>
+        <a routerLink="/forgot-password">password?</a>
       </p>
 
       <div class="or-box">
@@ -64,7 +72,7 @@
       <button
         mat-raised-button
         class="btn btn-outline"
-        routerLink="/auth/register"
+        routerLink="/register"
         type="button"
       >
         Sign up
