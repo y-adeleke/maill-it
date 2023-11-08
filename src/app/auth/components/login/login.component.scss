@@ -103,3 +103,26 @@
     }
   }
 }
+
+.slidefromright {
+  animation: slideFromRight 0.3s ease-in-out;
+}
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

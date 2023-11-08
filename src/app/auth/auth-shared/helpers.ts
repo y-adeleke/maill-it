@@ -5,6 +5,7 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 
 export function convertUsernameToEmail(username: string): string {
   if (username.includes('@maily.com')) {
@@ -31,6 +32,15 @@ export interface AuthResponse {
   data?: any;
 }
 
+// Custom validator function
+export function emailDomainValidator(domainName: string): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const email: string = control.value;
+    const domain = email.substring(email.lastIndexOf('@') + 1);
+    return domain === domainName ? null : { emailDomain: true };
+  };
+}
+
 export async function checkFieldExists(
   collection: CollectionReference<DocumentData>,
   field: string,
@@ -53,6 +63,10 @@ export function generateBaseEmails(
     `${sanitizedFirstName}23`,
     `${sanitizedFirstName}${sanitizedLastName[0]}`,
     `${sanitizedLastName}43`,
+    `${sanitizedLastName}${sanitizedFirstName}`,
+    `${sanitizedFirstName}23${sanitizedLastName[0]}`,
+    `${sanitizedFirstName}${sanitizedLastName[0]}`,
+    `${sanitizedFirstName}${sanitizedLastName}43`,
   ];
 }
 

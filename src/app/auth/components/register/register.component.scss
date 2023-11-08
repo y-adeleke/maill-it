@@ -68,6 +68,29 @@
   transition: all 0.5s ease-in-out;
 }
 
+.slidefromright {
+  animation: slideFromRight 0.3s ease-in-out;
+}
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(50%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 //OVERRIDEN DEFAULT ANGULAR MATERIAL STYLES
 ::ng-deep .mdc-evolution-chip-set__chips {
   display: flex;
@@ -124,23 +147,6 @@
 }
 
 
-@keyframes slideFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  50% {
-    transform: translateX(50%);
-    opacity: 0;
-  }
-  80% {
-    transform: translateX(-20%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
+
 
 */

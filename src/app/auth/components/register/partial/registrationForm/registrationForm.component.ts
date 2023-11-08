@@ -68,10 +68,10 @@ export class RegistrationFormComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.userInfoFormGroup = this.formBuilder.group({
       firstName: ['', [Validators.required, noWhiteSpaceValidator()]],
-      lastName: ['adeleke', [Validators.required, noWhiteSpaceValidator()]],
+      lastName: ['', [Validators.required, noWhiteSpaceValidator()]],
       dob: ['', [Validators.required]],
       countryCode: ['+1', Validators.required],
-      phoneNumber: ['4', [Validators.required, noWhiteSpaceValidator()]],
+      phoneNumber: ['', [Validators.required, noWhiteSpaceValidator()]],
     });
     this.formGroupEmitter.emit(this.userInfoFormGroup);
   }

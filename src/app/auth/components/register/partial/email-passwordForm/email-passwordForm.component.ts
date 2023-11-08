@@ -26,6 +26,7 @@ import { noWhiteSpaceValidator } from '../Validations';
 import { AuthSignUpService } from 'src/app/auth/auth-signup-service.service';
 import { LoadingMessageService } from 'src/app/shared/loading-message.service';
 import { Subscription } from 'rxjs';
+import { emailDomainValidator } from 'src/app/auth/auth-shared/helpers';
 
 @Component({
   selector: 'app-email-password-form',
@@ -64,7 +65,12 @@ export class EmailPasswordFormComponent implements OnInit, OnDestroy {
     this.regForm = this.formBuilder.group({
       email: [
         '',
-        [Validators.required, noWhiteSpaceValidator(), Validators.email],
+        [
+          Validators.required,
+          noWhiteSpaceValidator(),
+          Validators.email,
+          emailDomainValidator('maily.com'),
+        ],
       ],
       password: [
         '',
@@ -113,8 +119,6 @@ export class EmailPasswordFormComponent implements OnInit, OnDestroy {
       behavior: 'smooth',
     });
   }
-
-  loadSuggestions() {}
 
   //Email (Step 3)
   async emailFormHandler() {

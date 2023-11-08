@@ -131,6 +131,10 @@ export class AuthSignUpService {
       let message = error.message;
       if (error.code === 'auth/email-already-in-use') {
         message = 'Recovery email already in use';
+      } else if (error.code === 'auth/invalid-email') {
+        message = 'Invalid recovery email';
+      } else if (error.code === 'auth/weak-password') {
+        message = 'Weak password';
       }
       return {
         success: false,
@@ -139,12 +143,3 @@ export class AuthSignUpService {
     }
   }
 }
-
-/*
-verify phone number
-get username and recovery email
-ensure username is unique
-use the recovery email to create a firebase account
-create a firestore document for the user with the username and recovery email
-
- */

@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { AuthAccessService } from '../../auth-access-service.service';
 import { LoadingMessageService } from 'src/app/shared/loading-message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formbuilder: FormBuilder,
     private authAccessService: AuthAccessService,
-    private loadingMessageService: LoadingMessageService
+    private loadingMessageService: LoadingMessageService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.signInForm = this.formbuilder.group({
@@ -57,7 +59,7 @@ export class LoginComponent implements OnInit {
       const res = await this.authAccessService.signIn(email, password);
       this.loadingMessageService.hideLoading();
       if (res.success) {
-        // navigate to home page
+        this.router.navigateByUrl('/mail');
       }
       this.loadingMessageService.openSnackBarMessage(res.message);
     }

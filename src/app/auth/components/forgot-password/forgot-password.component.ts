@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RegistrationFormComponent } from '../register/partial/registrationForm/registrationForm.component';
-import { EmailPasswordFormComponent } from '../register/partial/email-passwordForm/email-passwordForm.component';
 import { RouterLink } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,7 +13,8 @@ import {
   ReactiveFormsModule,
   FormGroup,
 } from '@angular/forms';
-import { noWhiteSpaceValidator } from '../register/partial/Validations';
+import { AuthAccessService } from '../../auth-access-service.service';
+import { LoadingMessageService } from 'src/app/shared/loading-message.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -27,8 +26,6 @@ import { noWhiteSpaceValidator } from '../register/partial/Validations';
     MatButtonModule,
     MatStepperModule,
     MatIconModule,
-    RegistrationFormComponent,
-    EmailPasswordFormComponent,
     RouterLink,
     MatInputModule,
     MatFormFieldModule,
@@ -37,45 +34,31 @@ import { noWhiteSpaceValidator } from '../register/partial/Validations';
   ],
 })
 export class ForgotPasswordComponent {
-  isEditable = true;
-  hide = true;
-
   emailForm: FormGroup;
-  passwordForm: FormGroup;
 
   @ViewChild('stepper') stepper: any;
 
-  goBack() {
-    this.stepper.previous();
-  }
-
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authAcessService: AuthAccessService,
+    private loadingMessageService: LoadingMessageService
+  ) {
     this.emailForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
-    this.passwordForm = this.formBuilder.group({
-      password: [
-        '',
-        [Validators.required, Validators.minLength(8), noWhiteSpaceValidator()],
-      ],
-    });
   }
 
-  onPasswordInput() {
-    let password = this.passwordForm.get('password')?.value?.replace(/\s/g, '');
-    this.passwordForm.get('password')?.setValue(password, { emitEvent: false });
-  }
-
-  emailHandler() {
+  async emailHandler() {
     if (this.emailForm.valid) {
-      console.log(this.emailForm.value);
-      this.stepper.next();
-    }
-  }
-  passwordFormHandler() {
-    if (this.passwordForm.valid) {
-      console.log(this.passwordForm.value);
-      this.stepper.next();
+      this.loadingMessageService.showLoading();
+      const res = await this.authAcessService.resetPassword(
+        this.emailForm.value.email
+      );
+      this.loadingMessageService.hideLoading();
+      if (res.success) {
+        this.stepper.next();
+      }
+      this.loadingMessageService.openSnackBarMessage(res.message);
     }
   }
 }

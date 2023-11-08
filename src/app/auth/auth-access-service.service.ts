@@ -11,6 +11,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  confirmPasswordReset,
 } from 'firebase/auth';
 import { getRecoveryEmailByUsername } from './auth-shared/helpers';
 import { Observable, map } from 'rxjs';
@@ -54,7 +55,15 @@ export class AuthAccessService {
         message: 'Welcome back!',
       };
     } catch (error: any) {
-      return { success: false, message: error.message };
+      let message = error.message;
+      if (error.code === 'auth/invalid-login-credentials') {
+        message = 'Incorrect credentials';
+      } else if (error.code === 'auth/user-not-found') {
+      } else if (error.code === 'auth/too-many-requests') {
+        message =
+          'Too many requests. Please reset your password /try again later.';
+      }
+      return { success: false, message };
     }
   }
 
@@ -82,18 +91,21 @@ export class AuthAccessService {
       return { success: false, message: error.message };
     }
   }
+
+  async newPassword(oobCode: string, password: string): Promise<AuthResponse> {
+    try {
+      await confirmPasswordReset(this.auth, oobCode, password);
+      return { success: true, message: 'Password reset successful' };
+    } catch (error: any) {
+      let message = error.message;
+      if (error.code === 'auth/invalid-action-code') {
+        message = 'The reset code is invalid or expired.';
+      } else if (error.code === 'auth/weak-password') {
+        message = 'Password is weak';
+      } else if (error.code === 'auth/internal-error') {
+        message = 'You are not authorized to perform this action.';
+      }
+      return { success: false, message: message };
+    }
+  }
 }
-
-/*
-sign <in
-get username and password 
-find  the firestore document with the username and retrerive the recovery email
-sign user in with the recovery email and password and retrevie the firebase uid
-get the firestore document with the uid and retrieve the data.
-
-reset password
-get username
-find the firestore document with the username and retrieve the recovery email
-send password reset email to recovery email
-
- */

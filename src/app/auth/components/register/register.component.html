@@ -1,6 +1,6 @@
 <div class="sign-in-box">
   <div class="mail-bg"></div>
-  <div class="form-box">
+  <div class="form-box slidefromright">
     <mat-stepper linear #stepper labelPosition="bottom" class="stepper-box">
       <!-- Step 1   -->
       <mat-step [stepControl]="userInformationFG" [editable]="isEditable">
@@ -37,7 +37,12 @@
         <div class="greetings">
           <h1>👋Welcome!</h1>
           <p>Connecting You Instantly, Delivering with Precision</p>
-          <button class="expore-btn" mat-button mat-raised-button>
+          <button
+            class="expore-btn"
+            (click)="onLogin()"
+            mat-button
+            mat-raised-button
+          >
             Explore
           </button>
         </div>

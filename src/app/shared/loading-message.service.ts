@@ -20,7 +20,7 @@ export class LoadingMessageService {
 
   openSnackBarMessage(message: string) {
     this._snackbar.openFromComponent(SnackBarMessageBoxComponent, {
-      duration: 4000,
+      duration: 5000,
       data: { message: message },
     });
   }
