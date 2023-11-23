@@ -61,7 +61,7 @@ export class AuthAccessService {
       } else if (error.code === 'auth/user-not-found') {
       } else if (error.code === 'auth/too-many-requests') {
         message =
-          'Too many requests. Please reset your password /try again later.';
+          'Too many requests. Please reset your password / try again later.';
       }
       return { success: false, message };
     }
